@@ -1,35 +1,56 @@
 import { useState } from "react";
 
 function App() {
-  const [second, setSecond] = useState<string>("00");
-  const [min, setMin] = useState<string>("00");
+  const [second, setSecond] = useState<string>("55");
+  const [min, setMin] = useState<string>("59");
   const [hour, setHour] = useState<string>("00");
 
   const startTime = async () => {
-    let secondOnePlace = Number(min.slice(1, 2));
-    let secondTenPlace = Number(min.slice(0, 1));
-    let totalSecond = 0;
+    let secondOnePlace = Number(second.slice(1, 2));
+    let secondTenPlace = Number(second.slice(0, 1));
+    let minOnePlace = Number(min.slice(1, 2));
+    let minTenPlace = Number(min.slice(0, 1));
+    let hourOnePlace = Number(hour.slice(1, 2));
+    let hourTenPlace = Number(hour.slice(0, 1));
     setInterval(() => {
-      if (totalSecond < 59) {
-        totalSecond++;
+      if (`${secondTenPlace}${secondOnePlace}` < "59") {
         secondOnePlace++;
         if (secondOnePlace > 9) {
           secondTenPlace++;
           secondOnePlace = 0;
         }
+      } else if (`${secondTenPlace}${secondOnePlace}` === "59") {
+        secondTenPlace = 0;
+        secondOnePlace = 0;
+        minOnePlace++;
+        if (minOnePlace > 9) {
+          minTenPlace++;
+          minOnePlace = 0;
+        }
+      }
+      if (`${minTenPlace}${minOnePlace}` > "59") {
+        minTenPlace = 0;
+        minOnePlace = 0;
+        hourOnePlace++;
+        if (hourOnePlace > 9) {
+          hourTenPlace++;
+          hourOnePlace = 0;
+        }
       }
       setSecond(`${secondTenPlace}${secondOnePlace}`);
+      setMin(`${minTenPlace}${minOnePlace}`);
+      setHour(`${hourTenPlace}${hourOnePlace}`);
     }, 1000);
   };
-
-  console.log(second);
 
   const stopTime = () => {
     console.log("stop");
   };
 
   const resetTime = () => {
-    console.log("reset");
+    setSecond("00");
+    setMin("00");
+    setHour("00");
   };
 
   return (
